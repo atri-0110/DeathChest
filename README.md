@@ -1,39 +1,29 @@
-# PlayerHomes
+# DeathChest
 
-A player homes plugin for AllayMC servers that allows players to set multiple homes and teleport between them.
+A death chest system for AllayMC that stores player items when they die, preventing item loss.
 
 ## Features
 
-- **Set Multiple Homes**: Players can set up to 10 homes with custom names
-- **Teleport to Homes**: Quick teleportation to any saved home location
-- **Cross-Dimension Support**: Homes work across different dimensions (Overworld, Nether, End)
-- **Persistent Storage**: All homes are saved to JSON files and persist across server restarts
-- **Home Management**: Easy listing, deletion, and updating of homes
-- **Creation Timestamps**: Each home records when it was created
+- **Automatic Item Storage**: When a player dies, all their inventory items are stored in a virtual death chest
+- **Chest Recovery**: Players can recover their items using the `/deathchest` command
+- **Expiration System**: Death chests expire after 24 hours
+- **Cross-Dimension Support**: Works across Overworld, Nether, and End dimensions
+- **Persistent Storage**: All chests are saved to JSON files
 
 ## Commands
 
-| Command | Permission | Description |
-|---------|------------|-------------|
-| `/home <name>` | `playerhomes.use` | Teleport to a home |
-| `/home set <name>` | `playerhomes.use` | Set a home at current location |
-| `/home delete <name>` | `playerhomes.delete` | Delete a home |
-| `/home list` | `playerhomes.use` | List all your homes |
-| `/home help` | `playerhomes.use` | Show help message |
-
-## Permissions
-
-```
-playerhomes.use - Access to basic home commands (set, list, teleport)
-playerhomes.delete - Permission to delete homes
-```
+| Command | Description |
+|---------|-------------|
+| `/deathchest` or `/deathchest list` | List all your active death chests |
+| `/deathchest recover <id>` | Recover items from a specific death chest |
+| `/deathchest help` | Show command help |
 
 ## Installation
 
-1. Download the latest `PlayerHomes-0.1.0-shaded.jar` from [Releases](https://github.com/atri-0110/PlayerHomes/releases)
+1. Download the latest `DeathChest-0.1.0-shaded.jar` from releases
 2. Place the JAR file in your server's `plugins/` directory
-3. Start or restart the server
-4. The plugin will create a `homes/` folder in `plugins/PlayerHomes/`
+3. Restart the server
+4. The plugin will create a `chests/` folder in `plugins/DeathChest/`
 
 ## Building from Source
 
@@ -41,15 +31,7 @@ playerhomes.delete - Permission to delete homes
 ./gradlew shadowJar
 ```
 
-The compiled JAR will be in `build/libs/PlayerHomes-0.1.0-shaded.jar`
-
-## Configuration
-
-Homes are stored in per-player JSON files at `plugins/PlayerHomes/homes/<uuid>.json`
-
-Default settings:
-- Maximum 10 homes per player
-- Home names must be alphanumeric with underscores (max 16 characters)
+The compiled JAR will be in `build/libs/DeathChest-0.1.0-shaded.jar`
 
 ## Requirements
 
@@ -66,4 +48,4 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Support
 
-For support, please open an issue on [GitHub](https://github.com/atri-0110/PlayerHomes/issues).
+For support, please open an issue on [GitHub](https://github.com/atri-0110/DeathChest/issues).
