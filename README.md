@@ -1,51 +1,51 @@
 # DeathChest
 
-AllayMC 的死亡宝箱系统，当玩家死亡时自动存储物品，防止物品丢失。
+A death chest system for AllayMC that stores player items when they die, preventing item loss.
 
-## 功能特性
+## Features
 
-- **自动物品存储**: 玩家死亡时，所有背包物品都会存储到虚拟死亡宝箱中
-- **宝箱找回**: 玩家可以使用 `/deathchest` 命令找回物品
-- **过期系统**: 死亡宝箱24小时后过期
-- **跨维度支持**: 适用于主世界、下界和末地
-- **持久化存储**: 所有宝箱都保存到JSON文件
+- **Automatic Item Storage**: When a player dies, all their inventory items are stored in a virtual death chest
+- **Chest Recovery**: Players can recover their items using the `/deathchest` command
+- **Expiration System**: Death chests expire after 24 hours
+- **Cross-Dimension Support**: Works across Overworld, Nether, and End dimensions
+- **Persistent Storage**: All chests are saved to JSON files
 
-## 命令
+## Commands
 
-| 命令 | 描述 |
+| Command | Description |
 |---------|-------------|
-| `/deathchest` 或 `/deathchest list` | 列出你所有活跃的死亡宝箱 |
-| `/deathchest recover <id>` | 从指定的死亡宝箱中找回物品 |
-| `/deathchest help` | 显示命令帮助 |
+| `/deathchest` or `/deathchest list` | List all your active death chests |
+| `/deathchest recover <id>` | Recover items from a specific death chest |
+| `/deathchest help` | Show command help |
 
-## 安装
+## Installation
 
-1. 从发布页面下载最新的 `DeathChest-0.1.0-shaded.jar`
-2. 将 JAR 文件放入服务器的 `plugins/` 目录
-3. 重启服务器
-4. 插件会在 `plugins/DeathChest/` 目录下创建 `chests/` 文件夹
+1. Download the latest `DeathChest-0.1.0-shaded.jar` from releases
+2. Place the JAR file in your server's `plugins/` directory
+3. Restart the server
+4. The plugin will create a `chests/` folder in `plugins/DeathChest/`
 
-## 从源码构建
+## Building from Source
 
 ```bash
 ./gradlew shadowJar
 ```
 
-编译后的 JAR 文件位于 `build/libs/DeathChest-0.1.0-shaded.jar`
+The compiled JAR will be in `build/libs/DeathChest-0.1.0-shaded.jar`
 
-## 系统要求
+## Requirements
 
-- AllayMC 服务器 API 0.24.0 或更高版本
-- Java 21 或更高版本
+- AllayMC Server with API 0.24.0 or higher
+- Java 21 or higher
 
-## 许可证
+## License
 
-本项目采用 MIT 许可证 - 详情请查看 [LICENSE](LICENSE) 文件
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 作者
+## Author
 
 - **atri-0110** - [GitHub](https://github.com/atri-0110)
 
-## 支持
+## Support
 
-如需支持，请在 [GitHub](https://github.com/atri-0110/DeathChest/issues) 上提交 issue
+For support, please open an issue on [GitHub](https://github.com/atri-0110/DeathChest/issues).
