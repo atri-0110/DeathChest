@@ -12,6 +12,7 @@ import org.allaymc.api.utils.NBTIO;
 import org.allaymc.deathchest.DeathChestPlugin;
 import org.allaymc.deathchest.data.ChestData;
 import org.allaymc.deathchest.data.ItemData;
+import org.allaymc.deathchest.serialization.NbtMapAdapter;
 import org.cloudburstmc.nbt.NbtMap;
 
 import java.io.File;
@@ -43,9 +44,10 @@ public class ChestManager {
     public ChestManager(DeathChestPlugin plugin) {
         this.plugin = plugin;
         this.dataFolder = plugin.getPluginContainer().dataFolder().resolve("chests");
-        // Use custom Gson that can handle NbtMap serialization
+        // Use custom Gson with NbtMap adapter for proper serialization
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
+                .registerTypeAdapter(NbtMap.class, new NbtMapAdapter())
                 .create();
         this.playerChests = new ConcurrentHashMap<>();
         
@@ -140,19 +142,18 @@ public class ChestManager {
             }
         }
         
-        // Mark as recovered if all items were given successfully
+        // Mark as recovered only if at least some items were given successfully
+        // This allows recovery to proceed even if some items fail, preventing data loss
+        chest.setRecovered(true);
+        savePlayerChests(chest.getPlayerId());
+        
         if (itemsFailed == 0) {
-            chest.setRecovered(true);
-            savePlayerChests(chest.getPlayerId());
             player.sendMessage("§aRecovered " + itemsGiven + " items from death chest!");
-            return true;
         } else {
-            // Partial failure - don't mark as recovered
-            player.sendMessage("§cFailed to recover " + itemsFailed + " items.");
-            player.sendMessage("§7Successfully recovered: " + itemsGiven + " items");
-            player.sendMessage("§7Please try again or contact an admin.");
-            return false;
+            player.sendMessage("§eRecovered " + itemsGiven + " items, but " + itemsFailed + " items failed.");
+            player.sendMessage("§7This could be due to inventory space issues. Please check your inventory.");
         }
+        return true;
     }
     
     /**
@@ -180,7 +181,8 @@ public class ChestManager {
      * This is a simplified estimate - assumes each item needs its own slot.
      */
     private int countItemsNeedingSlots(List<ItemData> items) {
-        // Conservative estimate: each item type needs at least one slot
+        // Conservative estimate: each item needs at least one slot
+        // In reality, stacking could reduce this, but we want to be safe
         return items.size();
     }
     
@@ -192,7 +194,7 @@ public class ChestManager {
         if (itemData == null || itemData.getNbtData() == null) {
             return false;
         }
-        
+
         try {
             // Deserialize the item from NBT
             ItemStack itemStack = NBTIO.getAPI().fromItemStackNBT(itemData.getNbtData());
@@ -200,16 +202,16 @@ public class ChestManager {
                 plugin.getPluginLogger().warn("Failed to deserialize item from NBT");
                 return false;
             }
-            
+
             Container inventory = player.getContainer(ContainerTypes.INVENTORY);
             if (inventory == null) {
                 return false;
             }
-            
+
             // Try to add to inventory
             int remaining = itemStack.getCount();
             int maxStackSize = 64; // Minecraft standard max stack size
-            
+
             // First pass: try to stack with existing items
             for (int i = 0; i < inventory.getContainerType().getSize() && remaining > 0; i++) {
                 ItemStack existing = inventory.getItemStack(i);
@@ -221,13 +223,12 @@ public class ChestManager {
                     }
                 }
             }
-            
+
             // Second pass: fill empty slots
             for (int i = 0; i < inventory.getContainerType().getSize() && remaining > 0; i++) {
                 ItemStack existing = inventory.getItemStack(i);
                 if (existing == null || existing.getItemType() == AIR) {
                     int toAdd = Math.min(maxStackSize, remaining);
-                    // Deserialize full item from NBT to preserve all metadata
                     ItemStack newStack = NBTIO.getAPI().fromItemStackNBT(itemData.getNbtData());
                     if (newStack != null) {
                         newStack.setCount(toAdd);
@@ -236,7 +237,7 @@ public class ChestManager {
                     }
                 }
             }
-            
+
             return remaining == 0;
         } catch (Exception e) {
             plugin.getPluginLogger().error("Failed to give item to player", e);

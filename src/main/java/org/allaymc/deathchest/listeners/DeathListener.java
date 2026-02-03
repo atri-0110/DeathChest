@@ -48,6 +48,12 @@ public class DeathListener {
         Dimension dimension = location.dimension();
         World world = dimension.getWorld();
         
+        // Safety check: world should never be null, but we check anyway
+        if (world == null) {
+            plugin.getPluginLogger().error("Player " + player.getDisplayName() + " died in a dimension with no world!");
+            return;
+        }
+        
         ChestData chestData = new ChestData();
         chestData.setChestId(UUID.randomUUID());
         chestData.setPlayerId(player.getUniqueId());

@@ -43,14 +43,16 @@ public class DeathChestCommand extends Command {
                 
                 player.sendMessage("§6=== Your Death Chests ===");
                 
-                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
+                // Use locale-independent format to avoid issues on non-English systems
+                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm", java.util.Locale.US);
                 
                 for (int i = 0; i < chests.size(); i++) {
                     ChestData chest = chests.get(i);
                     String dateStr = sdf.format(new Date(chest.getDeathTime()));
-                    player.sendMessage("§e[" + (i + 1) + "] §f" + chest.getWorldName() + 
+                    int itemCount = chest.getItems() != null ? chest.getItems().size() : 0;
+                    player.sendMessage("§e[" + (i + 1) + "] §f" + chest.getWorldName() +
                         " §7(§f" + (int)chest.getX() + ", " + (int)chest.getY() + ", " + (int)chest.getZ() + "§7)" +
-                        " §7- " + dateStr + " §7- ID: §f" + chest.getChestId().toString().substring(0, 8));
+                        " §7- " + dateStr + " §7- " + itemCount + " items §7- ID: §f" + chest.getChestId().toString().substring(0, 8));
                 }
                 
                 player.sendMessage("§7Use §e/deathchest recover <id> §7to recover items");
