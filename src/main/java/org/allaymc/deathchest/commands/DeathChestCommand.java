@@ -87,12 +87,10 @@ public class DeathChestCommand extends Command {
                     }
                 }
                 
-                if (chestManager.recoverChest(player.getUniqueId(), chestId)) {
-                    player.sendMessage("§aDeath chest recovered successfully!");
-                    player.sendMessage("§7Items have been returned to your inventory.");
+                if (chestManager.recoverChest(player, chestId)) {
                     return context.success();
                 } else {
-                    player.sendMessage("§cCould not recover chest. It may have expired or already been recovered.");
+                    player.sendMessage("§cCould not recover chest. It may have expired, already been recovered, or your inventory is full.");
                     return context.fail();
                 }
             })

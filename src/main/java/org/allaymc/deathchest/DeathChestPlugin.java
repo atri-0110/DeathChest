@@ -24,6 +24,15 @@ public class DeathChestPlugin extends Plugin {
         this.chestManager = new ChestManager(this);
         Server.getInstance().getEventBus().registerListener(new DeathListener(this));
         Registries.COMMANDS.register(new DeathChestCommand(this));
+        
+        // Schedule periodic cleanup of expired chests (every 30 minutes = 36000 ticks)
+        Server.getInstance().getScheduler().scheduleRepeating(this, () -> {
+            if (this.chestManager != null) {
+                this.chestManager.cleanExpiredChests();
+            }
+            return true;
+        }, 36000);
+        
         this.pluginLogger.info("DeathChest enabled successfully!");
     }
     
